@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my first dapp</title>
+</head>
+
+<body>
+    <h1>Detwins First Dapp</h1>
+    <label for="mood">Input</label>
+    <input type="text" id="mood">
+    <div>
+        <button onclick={getMood()}>Get Mood</button>
+    </div>
+    <div>
+        <button onclick={setMood()}>Set Mood</button>
+    </div>
+    <div><p>My Mood Now: <span id="disMood"></span></p></div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+    <script>
+        window.ethereum.enable();
+        var provider = new ethers.providers.Web3Provider(
+            web3.currentProvider,
+            "ropsten"
+        );
+        var MoodContractAddress = "0x51d26f2bD4989510f9743a6aa0DDB8FCf4CB800e";
+        var MoodContractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_mood",
+                        "type": "string"
+                    }
+                ],
+                "name": "setMood",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getMood",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        var MoodContract;
+        var signer;
+        provider.listAccounts().then(function (accounts) {
+            signer = provider.getSigner(accounts[0]);
+            MoodContract = new ethers.Contract(
+                MoodContractAddress,
+                MoodContractABI,
+                signer
+            );
+        });
+
+        async function getMood() {
+            getMoodPromise = MoodContract.getMood();
+            var Mood = await getMoodPromise;
+            var disMood = document.getE
+            console.log(Mood);
+        }
+
+        async function setMood() {
+            let mood = document.getElementById('mood').value;
+            setMoodPromise = MoodContract.setMood(mood);
+            await setMoodPromise;
+        }
+
+    </script>
+</body>
+
+</html>
